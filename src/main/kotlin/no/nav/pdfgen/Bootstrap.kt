@@ -62,7 +62,7 @@ val handlebars: Handlebars = Handlebars(FileTemplateLoader(templateRoot.toFile()
 val log: Logger = LoggerFactory.getLogger("pdf-gen")
 
 fun main(args: Array<String>) {
-    initializeApplication(8080).start(wait = true)
+    initializeApplication(8082).start(wait = true)
 }
 
 class PdfContent(
@@ -122,7 +122,7 @@ fun initializeApplication(port: Int): ApplicationEngine {
                     log.info("Done generating PDF in ${System.currentTimeMillis() - startTime}ms")
                 } ?: call.respondText("Template or application not found", status = HttpStatusCode.NotFound)
             }
-            post("/api/convert") {
+            post("/api/v1/genpdf/html/{applicationName}") {
                 val html = call.receiveText()
 
                 call.respond(PdfContent(fromHtmlToDocument(html), "<title>"))
