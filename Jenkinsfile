@@ -49,7 +49,13 @@ pipeline {
         }
         stage('deploy to preprod') {
             steps {
-                deployApp action: 'jiraPreprod'
+                script {
+                    def payload = readFile('naiserator.yaml').replaceAll("@@VERSION@@", env.APPLICATION_VERSION)
+                    writeFile file: 'deploy-preprod.yaml', text: payload
+                    def deploymentName = sh(script: 'kubectl apply -f deploy-preprod.yaml', returnStdout: true).trim() =~ 'application.nais.io/(.+) created'
+                    sh "kubectl rollout status deployment $deploymentName"
+                }
+                //deployApp action: 'jiraPreprod'
             }
         }
         stage('deploy to production') {

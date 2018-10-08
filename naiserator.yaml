@@ -1,10 +1,10 @@
 apiVersion: "nais.io/v1alpha1"
 kind: "Application"
 metadata:
-  name: pdf-gen
+  name: pdf-gen-canary
   namespace: default
 spec:
-  image: "repo.adeo.no:5443/integrasjon/pdf-gen"
+  image: "repo.adeo.no:5443/integrasjon/pdf-gen:@@VERSION@@"
   port: 8080
   team: integrasjon
   replicas:
@@ -14,13 +14,13 @@ spec:
   healthcheck:
     liveness:
       path: /is_alive
-      timeout: 1
+      timeout: 5
       initialDelay: 5
       periodSeconds: 5
       failureThreshold: 30
     readiness:
       path: /is_alive
-      timeout: 1
+      timeout: 5
       initialDelay: 5
       periodSeconds: 5
       failureThreshold: 30
@@ -37,5 +37,4 @@ spec:
     requests:
       cpu: 50m
       memory: 128Mi
-  ingress:
-    disabled: false
+  ingresses: []
